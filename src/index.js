@@ -22,7 +22,7 @@ export default class stcAdapter {
     
     let configStr = JSON.stringify(appConfig);
 
-    return `${ld}$stc_ls_config=json_decode("${configStr}", true)${rd}`;
+    return `${ld}$stc_ls_config=json_decode(\'${configStr}\', true)${rd}`;
   }
 
   getLsBaseCode() {
