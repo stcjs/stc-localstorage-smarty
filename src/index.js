@@ -48,7 +48,7 @@ export default class stcAdapter {
     let lsCookie = this.options.lsCookie;
 
     let content = [
-      `${blockStart}if isset($smarty.cookies.${lsCookie}) ${blockEnd}`, 
+      `${blockStart}if isset($smarty.cookies.${lsCookie})${blockEnd}`, 
       `${blockStart}$stc_ls_cookie=$smarty.cookies.${lsCookie}${blockEnd}`, 
       `${blockStart}else${blockEnd}`, 
       `${blockStart}$stc_ls_cookie=""${blockEnd}`, 
