@@ -1,74 +1,80 @@
 export default class stcAdapter {
   constructor(options, config) {
+    this.blockStart = options.blockStart || config.tpl.ld[0];
+    this.blockEnd = options.blockStart || config.tpl.rd[0];
+
     this.options = options;
     this.config = config;
   }
 
   getLsSupportCode() {
-    let { ld, rd } = this.config.tpl;
+    let { blockStart, blockEnd } = this;
+
     let nlsCookie = this.options.nlsCookie;
 
     let data = {};
 
-    data['if'] = `${ld}if isset($smarty.server.HTTP_USER_AGENT) && strpos($smarty.server.HTTP_USER_AGENT, "MSIE ") === false && !isset($smarty.cookies.${nlsCookie})${rd}`;
-    data['else'] = `${ld}else${rd}`;
-    data['end'] = `${ld}/if${rd}`;
+    data['if'] = `${blockStart}if isset($smarty.server.HTTP_USER_AGENT) && strpos($smarty.server.HTTP_USER_AGENT, "MSIE ") === false && !isset($smarty.cookies.${nlsCookie})${blockEnd}`;
+    data['else'] = `${blockStart}else${blockEnd}`;
+    data['end'] = `${blockStart}/if${blockEnd}`;
 
     return data;
   }
 
   getLsConfigCode(appConfig) {
-    let { ld, rd } = this.config.tpl;
+    let { blockStart, blockEnd } = this;
     
     let configStr = JSON.stringify(appConfig);
 
-    return `${ld}$stc_ls_config=json_decode(\'${configStr}\', true)${rd}`;
+    return `${blockStart}$stc_ls_config=json_decode(\'${configStr}\', true)${blockEnd}`;
   }
 
   getLsBaseCode() {
-    let { ld, rd } = this.config.tpl;
+    let { blockStart, blockEnd } = this;
+    
     let name = 'stc_ls_base_flag';
 
     let data = {};
 
-    data['if'] = `${ld}if !isset($${name})${rd}${ld}$${name}=true${rd}`;
-    data['end'] = `${ld}/if${rd}`;
+    data['if'] = `${blockStart}if !isset($${name})${blockEnd}${blockStart}$${name}=true${blockEnd}`;
+    data['end'] = `${blockStart}/if${blockEnd}`;
 
     return data;
   }
 
   getLsParseCookieCode() {
-    let { ld, rd } = this.config.tpl;
+    let { blockStart, blockEnd } = this;
+
     let lsCookie = this.options.lsCookie;
 
     let content = [
-      `${ld}if isset($smarty.cookies.${lsCookie}) ${rd}`, 
-      `${ld}$stc_ls_cookie=$smarty.cookies.${lsCookie}${rd}`, 
-      `${ld}else${rd}`, 
-      `${ld}$stc_ls_cookie=""${rd}`, 
-      `${ld}/if${rd}`, 
-      `${ld}$stc_cookie_length=strlen($stc_ls_cookie)${rd}`, 
-      `${ld}$stc_ls_cookies=[]${rd}`, 
-      `${ld}$index=0${rd}`, 
-      `${ld}while $index < $stc_cookie_length${rd}`, 
-      `${ld}$stc_ls_cookies[$stc_ls_cookie[$index]]=$stc_ls_cookie[$index+1]${rd}`, 
-      `${ld}$index=$index+2${rd}`, 
-      `${ld}/while${rd}`,
+      `${blockStart}if isset($smarty.cookies.${lsCookie}) ${blockEnd}`, 
+      `${blockStart}$stc_ls_cookie=$smarty.cookies.${lsCookie}${blockEnd}`, 
+      `${blockStart}else${blockEnd}`, 
+      `${blockStart}$stc_ls_cookie=""${blockEnd}`, 
+      `${blockStart}/if${blockEnd}`, 
+      `${blockStart}$stc_cookie_length=strlen($stc_ls_cookie)${blockEnd}`, 
+      `${blockStart}$stc_ls_cookies=[]${blockEnd}`, 
+      `${blockStart}$index=0${blockEnd}`, 
+      `${blockStart}while $index < $stc_cookie_length${blockEnd}`, 
+      `${blockStart}$stc_ls_cookies[$stc_ls_cookie[$index]]=$stc_ls_cookie[$index+1]${blockEnd}`, 
+      `${blockStart}$index=$index+2${blockEnd}`, 
+      `${blockStart}/while${blockEnd}`,
     ];
 
     return content.join('');
   }
 
   getLsConditionCode(lsValue) {
-    let { ld, rd } = this.config.tpl;
+    let { blockStart, blockEnd } = this;
 
     let data = {};
 
-    data['if'] = `${ld}if isset($stc_ls_config["${lsValue}"]) && isset($stc_ls_cookies[$stc_ls_config["${lsValue}"]["key"]]) && $stc_ls_config["${lsValue}"]["version"] === $stc_ls_cookies[$stc_ls_config["${lsValue}"]["key"]]${rd}`;
-    data['else'] = `${ld}else${rd}`;
-    data['end'] = `${ld}/if${rd}`;
-    data['key'] = `${ld}$stc_ls_config["${lsValue}"]["key"]${rd}`;
-    data['version'] = `${ld}$stc_ls_config["${lsValue}"]["version"]${rd}`;
+    data['if'] = `${blockStart}if isset($stc_ls_config["${lsValue}"]) && isset($stc_ls_cookies[$stc_ls_config["${lsValue}"]["key"]]) && $stc_ls_config["${lsValue}"]["version"] === $stc_ls_cookies[$stc_ls_config["${lsValue}"]["key"]]${blockEnd}`;
+    data['else'] = `${blockStart}else${blockEnd}`;
+    data['end'] = `${blockStart}/if${blockEnd}`;
+    data['key'] = `${blockStart}$stc_ls_config["${lsValue}"]["key"]${blockEnd}`;
+    data['version'] = `${blockStart}$stc_ls_config["${lsValue}"]["version"]${blockEnd}`;
 
     return data;
   }
